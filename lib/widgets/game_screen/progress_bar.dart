@@ -2,61 +2,80 @@ import 'package:flutter/material.dart';
 import 'package:quiz/configs/app_colors.dart';
 
 class ProgressBar extends StatelessWidget {
-  static const _totalHeight = 50.0;
-  static const _circularBorderRadius = 40.0;
-  static const _borderWidth = 5.0;
-  static const _fillContainerMargin = 5.0;
+  const ProgressBar({
+    required this.numberOfAnsweredQuestions,
+    required this.totalNumberOfQuestions,
+  });
 
-  final double width;
   final int numberOfAnsweredQuestions;
   final int totalNumberOfQuestions;
 
-  const ProgressBar({
-    this.width = 300,
-    @required this.numberOfAnsweredQuestions,
-    @required this.totalNumberOfQuestions,
-  });
-
   @override
   Widget build(BuildContext context) {
-    final outlineContainerHeight = _totalHeight;
-    final outlineContainerWidth = width;
-    final fillContainerHeight = outlineContainerHeight - 2 * _fillContainerMargin;
-    final totalFillContainerWidth = outlineContainerWidth - 2 * _fillContainerMargin;
-    final fillContainerWidth = totalFillContainerWidth * (numberOfAnsweredQuestions / totalNumberOfQuestions);
+    double progress = (numberOfAnsweredQuestions + 1) / totalNumberOfQuestions;
 
-    return Stack(
-      children: <Widget>[
-        Container(
-          height: fillContainerHeight,
-          width: fillContainerWidth,
-          margin: EdgeInsets.all(_fillContainerMargin),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(_circularBorderRadius),
-            gradient: LinearGradient(
-              colors: [
-                AppColors.tomato,
-                AppColors.purple,
-              ],
+    return Column(
+      children: [
+        // Progress Text
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Progress',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white.withOpacity(0.7),
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-        ),
-        Container(
-          height: outlineContainerHeight,
-          width: outlineContainerWidth,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(_circularBorderRadius),
-            border: Border.all(
-              width: _borderWidth,
-              color: AppColors.darkSlateBlue,
+            Text(
+              '${numberOfAnsweredQuestions + 1}/$totalNumberOfQuestions',
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
+          ],
         ),
+        
+        const SizedBox(height: 12),
+        
+        // Progress Bar
         Container(
-          height: outlineContainerHeight,
-          width: outlineContainerWidth,
-          child: Center(
-            child: Text('$numberOfAnsweredQuestions/$totalNumberOfQuestions'),
+          height: 12,
+          decoration: BoxDecoration(
+            color: AppColors.darkSlateBlue,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Stack(
+            children: [
+              // Background
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              
+              // Progress
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeOut,
+                width: MediaQuery.of(context).size.width * progress,
+                decoration: BoxDecoration(
+                  gradient: AppColors.primaryGradient,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],

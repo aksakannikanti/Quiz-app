@@ -6,19 +6,20 @@ import '../../models/question.dart';
 import '../../services/quiz_service.dart';
 
 class GameScreen extends StatefulWidget {
+  const GameScreen({super.key}); // FIX: Added const constructor and super.key
+
   @override
   _GameScreenState createState() => _GameScreenState();
 }
 
 class _GameScreenState extends State<GameScreen> {
-  bool isLoading;
-  List<Question> questions;
+  bool isLoading = true; // FIX: Initialized
+  List<Question> questions = []; // FIX: Initialized
   static const numberOfQuestions = 10;
 
   @override
   void initState() {
     super.initState();
-
     getQuestions();
   }
 
@@ -27,17 +28,17 @@ class _GameScreenState extends State<GameScreen> {
       isLoading = true;
     });
 
-    questions = await QuizService().getQuestions(numberOfQuestions);
+    final fetchedQuestions = await QuizService().getQuestions(numberOfQuestions);
 
-    if (questions == null) {
+    if (fetchedQuestions.isEmpty) { // FIX: Check for empty list instead of null
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Ooops!'),
-          content: Text('Something went wrong.'),
+          title: const Text('Ooops!'),
+          content: const Text('Something went wrong.'),
           actions: <Widget>[
-            FlatButton(
-              child: Text('Try again'),
+            TextButton( // FIX: Replaced FlatButton with TextButton
+              child: const Text('Try again'),
               onPressed: () {
                 Navigator.pop(context);
                 getQuestions();
@@ -49,6 +50,7 @@ class _GameScreenState extends State<GameScreen> {
       );
     } else {
       setState(() {
+        questions = fetchedQuestions;
         isLoading = false;
       });
     }
@@ -59,7 +61,7 @@ class _GameScreenState extends State<GameScreen> {
     return Scaffold(
       body: SafeArea(
         child: isLoading
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(),
               )
             : Quiz(

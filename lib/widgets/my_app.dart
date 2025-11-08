@@ -4,20 +4,27 @@ import 'package:quiz/configs/app_colors.dart';
 import 'package:quiz/widgets/home_screen/home_screen.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key}); // FIX: Added const constructor
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: AppColors.darkSlateGray,
-        accentColor: AppColors.dodgerBlue,
+        colorScheme: ColorScheme.dark(
+          primary: AppColors.darkSlateGray,
+          secondary: AppColors.dodgerBlue,
+          surface: AppColors.darkSlateGray, // FIX: background → surface
+        ),
         scaffoldBackgroundColor: AppColors.darkSlateGray,
-        fontFamily: GoogleFonts.oxygen().fontFamily,
+        textTheme: GoogleFonts.oxygenTextTheme(
+          ThemeData(brightness: Brightness.dark).textTheme,
+        ),
       ),
-      home: Scaffold(
+      home: const Scaffold( // FIX: Added const
         body: SafeArea(
-          child: HomeScreen(),
+          child: HomeScreen(), // FIX: Added const
         ),
       ),
     );

@@ -10,14 +10,16 @@ class QuizService {
     final url = '$_baseEndpoint?amount=$count&type=boolean';
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url)); // FIX: Added Uri.parse()
 
       if (response.statusCode == 200) {
         final jsonString = json.decode(response.body);
 
         final List<dynamic> questionsAsJsonList = jsonString['results'];
-        if (questionsAsJsonList != null) {
-          final List<Question> questions = questionsAsJsonList.map((item) => Question.fromJson(item)).toList();
+        if (questionsAsJsonList.isNotEmpty) {
+          final List<Question> questions = questionsAsJsonList
+              .map((item) => Question.fromJson(item))
+              .toList();
 
           return questions;
         }
@@ -26,6 +28,6 @@ class QuizService {
       print('An error occured: $error');
     }
 
-    return null;
+    return []; // FIX: Return empty list instead of null
   }
 }

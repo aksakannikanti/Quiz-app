@@ -1,5 +1,4 @@
 import 'package:html_unescape/html_unescape.dart';
-import 'package:meta/meta.dart';
 
 class Question {
   final String category;
@@ -10,13 +9,13 @@ class Question {
   final List<String> incorrectAnswers;
 
   Question({
-    @required this.category,
-    @required this.type,
-    @required this.difficulty,
-    @required this.question,
-    @required this.correctAnswer,
-    @required this.incorrectAnswers,
-  });
+  required this.category,
+  required this.type,
+  required this.difficulty,
+  required this.question,
+  required this.correctAnswer,
+  required this.incorrectAnswers,
+});
 
   factory Question.fromJson(Map<String, dynamic> json) => Question(
         category: json['category'],
